@@ -1,0 +1,14 @@
+.groups {
+    margin: 5px;
+    padding: 5px;  
+}
+
+.text-updater-node {
+    text-align: center;
+    padding: 12px;
+  }
+  
+.border {
+    border-style: solid;
+    border-width: 1px;
+}
