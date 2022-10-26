@@ -22,7 +22,7 @@ export default function WidgetSector() {
   const handleChange = (e) =>{
     const elements = elementsRef.current;
     const sourceElement = elements[elements.length - 1];
-    console.log(sourceElement);
+    //console.log(sourceElement);
     let currentFile = e.target.files[0];
     const img = new Image();
     img.src = URL.createObjectURL(currentFile);
@@ -35,7 +35,7 @@ export default function WidgetSector() {
       }
       else{
         setFile(URL.createObjectURL(currentFile));
-        console.log(URL.createObjectURL(currentFile));
+        //console.log(URL.createObjectURL(currentFile));
         UploadService.uploadGRPC(currentFile);
         sourceElement.data.onCreation = this.width + 'x' + this.height;
       }
@@ -54,11 +54,11 @@ export default function WidgetSector() {
   const [elements, setElements, elementsRef] = useState([]);
   const onConnect = (params) => {
     setElements((els) => addEdge(params, els));
-    console.log(elementsRef.current);
-    console.log(params);
+    // console.log(elementsRef.current);
+    // console.log(params);
     const sourceElement = elementsRef.current.filter(item => item.id === params.source);
     const targetElement = elementsRef.current.filter(item => item.id === params.target);
-    alert("Output dimension: " + sourceElement[0].data.onCreation + "\n" + "Minimum input dimension: " + targetElement[0].data.onCreation);
+    alert(`Output dimension: ${sourceElement[0].data.onCreation}\nMinimum input dimension: ${targetElement[0].data.onCreation}`);
   };
   const onElementsRemove = (elementsToRemove) =>
     setElements((els) => removeElements(elementsToRemove, els));

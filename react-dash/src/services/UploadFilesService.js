@@ -21,13 +21,10 @@ class UploadFilesService {
 
   uploadGRPC(file) {
     var client = new DashClient('http://localhost:8080');
-    console.log(client);
-    console.log(file);
     var request = new File();
     request.setKey('example.jpg');
     file.arrayBuffer().then(buff => {
       let byteArray = new Uint8Array(buff);
-      console.log(byteArray);
       request.setValue(byteArray);
       client.dash_Put(request, {}, (err, response) => {
           console.log("Put success: ");
