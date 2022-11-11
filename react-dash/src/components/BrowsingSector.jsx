@@ -6,7 +6,7 @@ export default function BrowsingSector(props) {
       <img src={props.file ? props.file:defaultimage}  alt="Browsing" 
         onError={event => {
         event.target.src = {defaultimage};
-        event.onerror = null
+        event.onError = null
       }}
       style={{   
         display: 'block',

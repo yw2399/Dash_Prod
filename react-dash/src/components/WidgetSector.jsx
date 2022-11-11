@@ -13,34 +13,14 @@ import ReactFlow, {
 } from "react-flow-renderer";
 
 
-let id = 0;
-const getId = (name) => `${name}_${id++}`;
+let ids = 0;
+const getId = (name) => `${name}_${ids++}`;
 const nodeTypes = { dataUpload: DataUpload };
 
 export default function WidgetSector() {
   const [file, setFile] = useState(false);
-  const handleChange = (e) =>{
-    const elements = elementsRef.current;
-    const sourceElement = elements[elements.length - 1];
-    //console.log(sourceElement);
-    let currentFile = e.target.files[0];
-    const img = new Image();
-    img.src = URL.createObjectURL(currentFile);
-    img.onload = function() {
-      alert("The minimum required dimensions are: " + sourceElement.data.onCreation + "\n" +
-      "The dimensions of the image are: " + this.width + 'x' + this.height);
-      const elementDimensions =  sourceElement.data.onCreation.split("x");
-      if(this.width < elementDimensions[0] || this.height < elementDimensions[1]){
-        alert("The image is too small");
-      }
-      else{
-        setFile(URL.createObjectURL(currentFile));
-        //console.log(URL.createObjectURL(currentFile));
-        UploadService.uploadGRPC(currentFile);
-        sourceElement.data.onCreation = this.width + 'x' + this.height;
-      }
-    }
-  }
+  const [currentElement, setCurrentId, currentIdRef] = useState("");
+
 
   const onDragStart = (event, nodeType, name) => {
     event.dataTransfer.setData("nodeType", nodeType);
@@ -69,6 +49,34 @@ export default function WidgetSector() {
     event.dataTransfer.dropEffect = "move";
   };
 
+  const handleChange = (id, e) => {
+    console.log(id)
+    const elements = elementsRef.current;
+    console.log(elements)
+    const sourceElement = elements.find((el) => el.id === id);
+    let currentFile = e.target.files[0];
+    const img = new Image();
+    img.src = URL.createObjectURL(currentFile);
+    console.log(sourceElement.data);
+    console.log(sourceElement)
+    console.log(e.source)
+    console.log(e.target)
+    console.log(e)
+    img.onload = function() {
+      alert("The minimum required dimensions are: " + sourceElement.data.onCreation + "\n" +
+      "The dimensions of the image are: " + this.width + 'x' + this.height);
+      const elementDimensions =  sourceElement.data.onCreation.split("x");
+      if(this.width < elementDimensions[0] || this.height < elementDimensions[1]){
+        alert("The image is too small");
+      }
+      else{
+        setFile(URL.createObjectURL(currentFile));
+        UploadService.uploadGRPC(currentFile);
+        sourceElement.data.onCreation = this.width + 'x' + this.height;
+      }
+    }
+  }
+
   const onDrop = (event) => {
     event.preventDefault();
     const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
@@ -93,14 +101,20 @@ export default function WidgetSector() {
         fontFamily: "Helvetica",
         boxShadow: "5px 5px 5px 0px rgba(0,0,0,.10)"
       },
-      data: { label: `${name}`, onCreation: dimension, handleChange: handleChange },
       sourcePosition: "right",
       targetPosition: "left"
     };
+    setCurrentId(newNode.id);
+    console.log(newNode.id);
+    newNode.data = { label: `${name}`, onCreation: dimension, onchange: handleChange, currentElement : () => currentIdRef.current};
     setElements((es) => es.concat(newNode));
     if(type === "dataUpload"){
       alert("Minimum required dimensions: " + newNode.data.onCreation);
     }
+
+
+
+
   };
 
 
